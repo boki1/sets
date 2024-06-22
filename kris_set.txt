@@ -1,0 +1,84 @@
+
+namespace oop
+{
+
+    namespace details
+    {
+
+        // Does not allow duplicates!
+        template <typename T>
+        struct binary_tree
+        {
+            struct iterator;
+        };
+    }
+
+template <typename T, typename Container=details::binary_tree<T>>
+struct set
+{
+    using container = Container;
+    using container_iterator = typename Container::iterator;
+
+    bool operator[](const T& el) const noexcept
+    {
+        return false;
+    }
+
+    virtual ~set() noexcept;
+
+    container_iterator insert(const T &);
+    bool remove(container_iterator);
+    container_iterator find(const T &);
+
+    container_iterator begin() const;
+    container_iterator end() const;
+
+protected:
+    container m_c;
+};
+
+template <typename T>
+struct finite_set : public set<T>
+{
+    finite_set(const T *elements, int count)
+    {
+        for (int i = 0; i < count; ++i)
+            insert(elements[i]);
+    }
+};
+
+template <typename T>
+struct interval_set : set<T>
+{
+    interval_set(const T& lo, const T& hi)
+        : m_lo{lo}, m_hi{hi} {}
+
+    const T m_lo, m_hi;
+};
+
+template <typename T>
+using predicate_fun = bool (*)(const T &);
+
+template <typename T>
+struct predic_set : set<T>
+{
+    predic_set(predicate_fun<T> p)
+        : m_p{p}
+    {
+    }
+
+    predicate_fun<T> m_p;
+};
+
+template <typename T>
+struct intersection_set : set<T>
+{
+};
+
+template <typename T>
+struct union_set : set<T>
+{
+};
+
+
+}
